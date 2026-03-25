@@ -40,19 +40,19 @@
         <span class="dot"></span>
         Filters
       </button>
-      <button class="pill">
+      <button class="pill food">
         <span class="dot"></span>
         Food
       </button>
-      <button class="pill">
+      <button class="pill groceries">
         <span class="dot"></span>
         Groceries
       </button>
-      <button class="pill">
+      <button class="pill services">
         <span class="dot"></span>
         Services
       </button>
-      <button class="pill">
+      <button class="pill other">
         <span class="dot"></span>
         Other
       </button>
@@ -123,7 +123,55 @@
       </div>
     </div>
   </article>
+  <script>
+    const filtersContainer = document.querySelector('.filters');
+    const mainButton = filtersContainer.querySelector('.pill--primary');
+    const filterButtons = filtersContainer.querySelectorAll('button:not(.pill--primary)');
 
+    // Toggle visibility of filter buttons
+    mainButton.addEventListener('click', () => {
+      filtersContainer.classList.toggle('show-filters');
+    });
+
+    // Track active filters
+    const activeFilters = new Set();
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filterClass = [...button.classList].find(cls => 
+          cls !== 'pill'
+        );
+
+        // Toggle active state
+        if (activeFilters.has(filterClass)) {
+          activeFilters.delete(filterClass);
+          button.classList.remove('active');
+        } else {
+          activeFilters.add(filterClass);
+          button.classList.add('active');
+        }
+
+        applyFilters();
+      });
+    });
+
+    function applyFilters() {
+      const cards = document.querySelectorAll('.card'); // assumed class
+
+      cards.forEach(card => {
+        if (activeFilters.size === 0) {
+          card.style.display = '';
+          return;
+        }
+
+        const hasMatch = [...activeFilters].some(filter => 
+          card.querySelector(`.${filter}`)
+        );
+
+        card.style.display = hasMatch ? '' : 'none';
+      });
+    }
+  </script>
 </main>
   </div>
 </body>
